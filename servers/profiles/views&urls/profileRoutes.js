@@ -66,4 +66,29 @@ router.post("/", authenticateToken, async (req, res) => {
     }
 });
 
+router.get("/", authenticateToken, async (req, res) => {
+    const userId = req.user.sub; // Extract user ID from token
+    console.log("Extracted user ID from token:", userId); // Log user ID
+
+    try {
+        // Fetch email using user ID
+        const email = await fetchUserEmail(userId);
+        console.log("Fetched email for user ID:", email); // Log fetched email
+
+        // Fetch profile using email
+        const profile = await ProfileModel.findOne({ email });
+        if (!profile) {
+            return res.status(404).json({ message: "Profile not found" });
+        }
+
+        console.log("Fetched profile for email:", email); // Log fetched profile
+        res.status(200).json({ profile });
+    } catch (error) {
+        console.error("Error fetching profile:", error.message); // Log error details
+        res.status(500).json({ message: "Error fetching profile", error: error.message });
+    }
+});
+
+
+
 export default router;

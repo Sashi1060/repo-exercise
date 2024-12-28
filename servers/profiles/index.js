@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectionStatus } from "./config/databaseConnection.js";
 import profileRoutes from "./views&urls/profileRoutes.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -10,6 +11,13 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+
+app.use(cors(
+    {
+        origin: "http://localhost:5173",
+        credentials: true
+    }
+));
 
 // Routes
 app.use("/profiles", profileRoutes);
